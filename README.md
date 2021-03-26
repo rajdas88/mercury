@@ -81,6 +81,86 @@ I also used the interface options to enable ssh, but it was working even without
 
 [Source for first 3 steps](https://www.losant.com/blog/getting-started-with-the-raspberry-pi-zero-w-without-a-monitor)
 
+## 3.1 Reboot the Pi when it loses wireless connection
+
+Since the Pi was frequently unreachable, this script is to check if the Pi can
+ping the router. If not, it will force restart the wifi. We store this script
+in `/usr/local/bin/checkwifi.sh`
+```shell
+ping -c4 192.168.1.1 > /dev/null
+
+if [ $? != 0 ]
+then
+  echo "No network connection, restarting wlan0"
+  /sbin/ifdown 'wlan0'
+  sleep 5
+  /sbin/ifup --force 'wlan0'
+fi
+```
+
+The more extreme alternative is to reboot the Pi:
+```shell
+ping -c4 192.168.1.1 > /dev/null
+
+if [ $? != 0 ]
+then
+  sudo /sbin/shutdown -r now
+fi
+```
+
+I changed permissions to make this script runnable `sudo chmod 775 /usr/local/bin/checkwifi.sh`.
+
+Finally, I modified the crontab to run the above script every 10 minutes:
+`*/10 * * * * /usr/bin/sudo -H /usr/local/bin/checkwifi.sh >> /dev/null 2>&1`
+
+[Source](https://weworkweplay.com/play/rebooting-the-raspberry-pi-when-it-loses-wireless-connection-wifi/)
+
+## 3.2 Log2Ram
+
+As logs are frequently written to the Pi, this ends up causing a lot of writes
+to the SD card which will lessen its' lifespan. This step writes logs to memory and
+periodically writes those back to system logs.
+
+First, I installed rsync which helps with performance
+```shell
+sudo apt install rsync
+```
+*Note: this was already installed*
+
+Then I followed the install process:
+```shell
+echo "deb http://packages.azlux.fr/debian/ buster main" | sudo tee /etc/apt/sources.list.d/azlux.list
+wget -qO - https://azlux.fr/repo.gpg.key | sudo apt-key add -
+sudo apt update
+sudo apt install log2ram
+sudo reboot
+```
+
+After the reboot, to see if it's working:
+```shell
+$ df -h
+…
+log2ram          40M  532K   40M   2% /var/log
+…
+
+$ mount
+…
+log2ram on /var/log type tmpfs (rw,nosuid,nodev,noexec,relatime,size=40960k,mode=755)
+…
+```
+
+[Source](https://github.com/azlux/log2ram#install)
+
+## 3.3 Use SSH keys instead of password for Pi access
+
+I copied the SSH key from my machine to the Pi with the following command:
+```shell
+ssh-copy-id <USERNAME>@<IP-ADDRESS>
+```
+This allows me to login without the password everytime.
+
+[Source](https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md)
+
 ## [Optional] 4. Put the Pi in a case
 
 This step is pretty straightforward and useful to protect the Pi from the
