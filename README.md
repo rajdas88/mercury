@@ -47,7 +47,12 @@ directory of the device.
 
 The above files are used by the Raspberry Pi to properly set up both ssh and
 wireless access. These steps have to be done EXACTLY RIGHT or it's a pain to
-debug.
+debug. When done correctly, the `wpa_supplicant.conf` file will dissapear
+from the card.
+
+If the wifi information changes, recreate the `wpa_supplicant.conf` file and 
+add to the micro SD card again. It will automatically overwrite the wifi 
+config on the pi.
 
 ## 2. Connect to the Pi
 
