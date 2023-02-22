@@ -45,6 +45,9 @@ directory of the device.
   }
   ```
 
+This was for the Raspberry Pi Zero W which can only connect to a 2.4GHz.
+I tried the 5GHz connection multiple times before realizing the issue.
+
 The above files are used by the Raspberry Pi to properly set up both ssh and
 wireless access. These steps have to be done EXACTLY RIGHT or it's a pain to
 debug. When done correctly, the `wpa_supplicant.conf` file will dissapear
