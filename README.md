@@ -50,7 +50,7 @@ I tried the 5GHz connection multiple times before realizing the issue.
 
 The above files are used by the Raspberry Pi to properly set up both ssh and
 wireless access. These steps have to be done EXACTLY RIGHT or it's a pain to
-debug. When done correctly, the `wpa_supplicant.conf` file will dissapear
+debug. When done correctly, the `wpa_supplicant.conf` file will disappear
 from the card.
 
 If the wifi information changes, recreate the `wpa_supplicant.conf` file and 
