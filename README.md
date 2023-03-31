@@ -95,7 +95,7 @@ Since the Pi was frequently unreachable, this script is to check if the Pi can
 ping the router. If not, it will force restart the wifi. We store this script
 in `/usr/local/bin/checkwifi.sh`
 ```shell
-ping -c4 192.168.1.1 > /dev/null
+ping -c4 router_ip_address > /dev/null
 
 if [ $? != 0 ]
 then
@@ -108,7 +108,7 @@ fi
 
 The more extreme alternative is to reboot the Pi:
 ```shell
-ping -c4 192.168.1.1 > /dev/null
+ping -c4 router_ip_address > /dev/null
 
 if [ $? != 0 ]
 then
